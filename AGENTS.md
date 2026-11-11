@@ -1,6 +1,9 @@
 # Project rules
 
 - Always commit small, focused changes.
+- After implementation changes, tell the user the app is ready to try locally with `vp dev`.
+- Wait for the user's local review before adding or adjusting tests, pushing, or publishing.
+- Keep commits local until the user approves publishing.
 - Use short Conventional Commit messages.
 - Write simple, minimal, human-readable code.
 - Keep documentation to the point. Use simple English and short sentences.
