@@ -42,7 +42,9 @@ function render() {
   const params = new URLSearchParams(location.hash.slice(1));
   app.replaceChildren();
   const header = element("header");
-  header.append(element("h1", t().title));
+  const title = element("h1", t().title);
+  title.append(element("span", " 🎁", { "aria-hidden": "true" }));
+  header.append(title);
   const languages = element("div", "", { class: "languages" });
   for (const [code, label, flag] of [
     ["de", "Deutsch", "🇦🇹"],
