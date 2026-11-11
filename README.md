@@ -10,3 +10,5 @@ A plain HTML app scaffolded with Vite+. No frontend framework.
 
 The initial code was generated with AI assistance.
 The project uses the [MIT license](LICENSE).
+
+Pushes to `main` deploy to GitHub Pages through GitHub Actions.
