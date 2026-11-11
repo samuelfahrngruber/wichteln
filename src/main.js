@@ -74,6 +74,9 @@ function render() {
       ),
     );
   }
+  if (params.has("game")) {
+    header.append(element("a", t().newGame, { href: `#lang=${language}` }));
+  }
   header.append(languages);
   app.append(header);
   const main = element("main");
@@ -89,7 +92,6 @@ function render() {
     } catch {
       main.append(element("p", t().invalid, { role: "alert" }));
     }
-    main.append(element("a", t().newGame, { href: `#lang=${language}` }));
   } else {
     renderSetup(main);
   }
@@ -132,7 +134,7 @@ function renderSetup(main) {
     );
     list.append(item);
   });
-  main.append(list, element("h3", t().exclusions));
+  main.append(list, element("hr"), element("h3", t().exclusions));
   const from = element("select", "", { id: "from" });
   const to = element("select", "", { id: "to" });
   for (const name of names) {
@@ -180,6 +182,7 @@ function renderSetup(main) {
   });
   main.append(
     rules,
+    element("hr"),
     button(
       t().create,
       () => {
