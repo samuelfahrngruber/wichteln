@@ -1,5 +1,7 @@
 # Project rules
 
+- Always communicate with the user in English, even when they write in German.
+- Write agent instructions and documentation in English. Keep the app bilingual.
 - Always commit small, focused changes.
 - After implementation changes, tell the user the app is ready to try locally with `vp dev`.
 - Wait for the user's local review before adding or adjusting tests, pushing, or publishing.
