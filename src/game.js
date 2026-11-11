@@ -45,6 +45,11 @@ export function validateGame(game) {
     throw new Error("invalid");
   };
   if (!game || game.version !== 1) invalid();
+  if (
+    game.groupName !== undefined &&
+    (typeof game.groupName !== "string" || !game.groupName.trim())
+  )
+    invalid();
   const { names, exclusions, seed, assignments } = game;
   if (
     !Array.isArray(names) ||

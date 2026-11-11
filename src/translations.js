@@ -2,6 +2,9 @@ export const translations = {
   en: {
     title: "Secret Santa",
     setup: "Create a game",
+    settings: "General settings",
+    groupName: "Group name (required)",
+    groupRequired: "Enter a group name.",
     participants: "Participants",
     name: "Name",
     add: "Add",
@@ -36,6 +39,9 @@ export const translations = {
   de: {
     title: "Wichteln",
     setup: "Spiel erstellen",
+    settings: "Allgemeine Einstellungen",
+    groupName: "Gruppenname (erforderlich)",
+    groupRequired: "Gib einen Gruppennamen ein.",
     participants: "Teilnehmende",
     name: "Name",
     add: "Hinzufügen",

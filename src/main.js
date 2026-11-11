@@ -6,6 +6,7 @@ const app = document.querySelector("#app");
 let language = new URLSearchParams(location.hash.slice(1)).get("lang") === "en" ? "en" : "de";
 let names = [];
 let exclusions = [];
+let groupName = "";
 let gameLink = "";
 let revealed = -1;
 let message = "";
@@ -29,6 +30,7 @@ function announce(key) {
 function invalidateLink() {
   gameLink = "";
   message = "";
+  document.querySelector("#share-link")?.remove();
 }
 function labeled(label, control) {
   const wrapper = element("label", label);
@@ -102,6 +104,14 @@ function render() {
 
 function renderSetup(main) {
   main.append(element("h2", t().setup));
+  const groupInput = element("input", "", { id: "group-name", required: "" });
+  groupInput.value = groupName;
+  groupInput.addEventListener("input", () => {
+    groupName = groupInput.value;
+    invalidateLink();
+    announce("");
+  });
+  main.append(element("h3", t().settings), labeled(t().groupName, groupInput), element("hr"));
   const form = element("form");
   const input = element("input", "", { id: "name", autocomplete: "off", required: "" });
   form.append(labeled(t().name, input), element("button", t().add, { type: "submit" }));
@@ -188,6 +198,11 @@ function renderSetup(main) {
     button(
       t().create,
       () => {
+        if (!groupName.trim()) {
+          announce("groupRequired");
+          groupInput.focus();
+          return;
+        }
         if (names.length < 2) return announce("minimum");
         const pairs = exclusions.map((pair) => pair.map((name) => names.indexOf(name)));
         const seed = crypto.getRandomValues(new Uint32Array(1))[0];
@@ -196,7 +211,14 @@ function renderSetup(main) {
           const url = new URL(location.href);
           url.hash = new URLSearchParams({
             lang: language,
-            game: encodeGame({ version: 1, names, exclusions: pairs, seed, assignments }),
+            game: encodeGame({
+              version: 1,
+              groupName: groupName.trim(),
+              names,
+              exclusions: pairs,
+              seed,
+              assignments,
+            }),
           });
           gameLink = url.href;
           message = "";
@@ -210,10 +232,11 @@ function renderSetup(main) {
     ),
   );
   if (gameLink) {
+    const share = element("div", "", { id: "share-link" });
     const link = element("input", "", { id: "game-link", readonly: "", type: "url" });
     link.value = gameLink;
     link.addEventListener("focus", () => link.select());
-    main.append(
+    share.append(
       labeled(t().link, link),
       button(t().copy, async () => {
         try {
@@ -227,11 +250,13 @@ function renderSetup(main) {
       }),
       element("a", t().open, { href: gameLink }),
     );
+    main.append(share);
   }
 }
 
 function renderCards(main, game) {
-  main.append(element("h2", t().cards));
+  if (game.groupName) main.append(element("h2", game.groupName));
+  main.append(element(game.groupName ? "h3" : "h2", t().cards));
   const cards = element("div", "", { class: "cards" });
   game.names.forEach((name, index) => {
     const open = revealed === index;

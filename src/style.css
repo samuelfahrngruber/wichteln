@@ -190,7 +190,8 @@ a {
   color: var(--accent);
   text-underline-offset: 0.2em;
 }
-main > label {
+main > label,
+#share-link > label {
   margin-top: var(--space-6);
   margin-bottom: var(--space-2);
 }
