@@ -46,6 +46,11 @@ export function validateGame(game) {
   };
   if (!game || game.version !== 1) invalid();
   if (
+    game.maxValueCents !== undefined &&
+    (!Number.isSafeInteger(game.maxValueCents) || game.maxValueCents <= 0)
+  )
+    invalid();
+  if (
     game.groupName !== undefined &&
     (typeof game.groupName !== "string" || !game.groupName.trim())
   )

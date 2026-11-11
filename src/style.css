@@ -201,6 +201,35 @@ main > label,
   gap: var(--space-3);
   margin-block: var(--space-6);
 }
+.game-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-4);
+}
+.game-heading h2 {
+  flex: 1 1 12rem;
+  min-width: 0;
+  margin: 0;
+}
+.euro-bill {
+  display: grid;
+  flex-shrink: 0;
+  min-width: 7rem;
+  padding: var(--space-2) var(--space-4);
+  border: 3px double var(--accent);
+  border-radius: var(--space-1);
+  background: var(--subtle);
+  color: var(--accent);
+  text-align: center;
+}
+.euro-bill span {
+  font-size: 0.75rem;
+}
+.euro-bill strong {
+  font-size: 1.125rem;
+  font-variant-numeric: tabular-nums;
+}
 .card {
   min-height: 9rem;
   padding: var(--space-6);

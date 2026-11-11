@@ -7,6 +7,7 @@ let language = new URLSearchParams(location.hash.slice(1)).get("lang") === "en" 
 let names = [];
 let exclusions = [];
 let groupName = "";
+let maxValue = "";
 let gameLink = "";
 let revealed = -1;
 let message = "";
@@ -111,7 +112,26 @@ function renderSetup(main) {
     invalidateLink();
     announce("");
   });
-  main.append(element("h3", t().settings), labeled(t().groupName, groupInput), element("hr"));
+  const valueInput = element("input", "", {
+    id: "max-value",
+    type: "number",
+    min: "0.01",
+    step: "0.01",
+    inputmode: "decimal",
+    required: "",
+  });
+  valueInput.value = maxValue;
+  valueInput.addEventListener("input", () => {
+    maxValue = valueInput.value;
+    invalidateLink();
+    announce("");
+  });
+  main.append(
+    element("h3", t().settings),
+    labeled(t().groupName, groupInput),
+    labeled(`${t().maxValue} (€)`, valueInput),
+    element("hr"),
+  );
   const form = element("form");
   const input = element("input", "", { id: "name", autocomplete: "off", required: "" });
   form.append(labeled(t().name, input), element("button", t().add, { type: "submit" }));
@@ -203,6 +223,16 @@ function renderSetup(main) {
           groupInput.focus();
           return;
         }
+        const maxValueCents = Math.round(valueInput.valueAsNumber * 100);
+        if (
+          !valueInput.validity.valid ||
+          !Number.isSafeInteger(maxValueCents) ||
+          maxValueCents <= 0
+        ) {
+          announce("valueRequired");
+          valueInput.focus();
+          return;
+        }
         if (names.length < 2) return announce("minimum");
         const pairs = exclusions.map((pair) => pair.map((name) => names.indexOf(name)));
         const seed = crypto.getRandomValues(new Uint32Array(1))[0];
@@ -214,6 +244,7 @@ function renderSetup(main) {
             game: encodeGame({
               version: 1,
               groupName: groupName.trim(),
+              maxValueCents,
               names,
               exclusions: pairs,
               seed,
@@ -255,8 +286,20 @@ function renderSetup(main) {
 }
 
 function renderCards(main, game) {
-  if (game.groupName) main.append(element("h2", game.groupName));
-  main.append(element(game.groupName ? "h3" : "h2", t().cards));
+  const heading = element("div", "", { class: "game-heading" });
+  heading.append(element("h2", game.groupName || t().cards));
+  if (game.maxValueCents !== undefined) {
+    const amount = new Intl.NumberFormat(language === "de" ? "de-AT" : "en-GB", {
+      style: "currency",
+      currency: "EUR",
+      maximumFractionDigits: 2,
+    }).format(game.maxValueCents / 100);
+    const bill = element("div", "", { class: "euro-bill" });
+    bill.append(element("span", t().maxValue), element("strong", amount));
+    heading.append(bill);
+  }
+  main.append(heading);
+  if (game.groupName) main.append(element("h3", t().cards));
   const cards = element("div", "", { class: "cards" });
   game.names.forEach((name, index) => {
     const open = revealed === index;

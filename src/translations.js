@@ -5,6 +5,8 @@ export const translations = {
     settings: "General settings",
     groupName: "Group name (required)",
     groupRequired: "Enter a group name.",
+    maxValue: "Max. value",
+    valueRequired: "Enter a maximum gift value of at least €0.01, with up to two decimal places.",
     participants: "Participants",
     name: "Name",
     add: "Add",
@@ -42,6 +44,9 @@ export const translations = {
     settings: "Allgemeine Einstellungen",
     groupName: "Gruppenname (erforderlich)",
     groupRequired: "Gib einen Gruppennamen ein.",
+    maxValue: "Max. Wert",
+    valueRequired:
+      "Gib einen maximalen Geschenkwert ab 0,01 € mit höchstens zwei Nachkommastellen ein.",
     participants: "Teilnehmende",
     name: "Name",
     add: "Hinzufügen",
