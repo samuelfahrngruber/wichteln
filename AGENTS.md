@@ -6,6 +6,13 @@
 - Keep documentation to the point. Use simple English and short sentences.
 - Use bulleted lists when they help.
 - Use Vite+ commands. Do not add a frontend framework.
+- Keep the app mobile-friendly and accessible with minimal styling.
+- Store all game data in the URL. Do not require a server or local storage.
+- Preserve existing game links. The same link must always give the same assignments.
+- Exclusions are directional. Offer a shortcut to add both directions.
+- Keep English and German translations in sync.
+- Store final assignments in versioned links. Never redraw a saved game.
+- Test assignment rules and URL round trips when changing game logic.
 
 <!--VITE PLUS START-->
 
