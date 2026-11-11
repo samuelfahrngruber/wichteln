@@ -303,26 +303,29 @@ function renderCards(main, game) {
   const cards = element("div", "", { class: "cards" });
   game.names.forEach((name, index) => {
     const open = revealed === index;
-    cards.append(
-      button(
-        open ? t().greeting(name, game.names[game.assignments[index]]) : name,
-        () => {
-          revealed = revealed === index ? -1 : index;
-          render();
-          const card = document.querySelector(`#card-${index}`);
-          card.classList.add("flipping");
-          card.focus();
-        },
-        {
-          id: `card-${index}`,
-          class: "card",
-          "aria-pressed": String(open),
-          "aria-label": open
-            ? `${t().greeting(name, game.names[game.assignments[index]])} ${t().hide} ${name}`
-            : `${t().reveal} ${name}`,
-        },
-      ),
+    const greeting = t().greeting(name, game.names[game.assignments[index]]);
+    const card = button(
+      open ? greeting.join("") : name,
+      () => {
+        revealed = revealed === index ? -1 : index;
+        render();
+        const card = document.querySelector(`#card-${index}`);
+        card.classList.add("flipping");
+        card.focus();
+      },
+      {
+        id: `card-${index}`,
+        class: "card",
+        "aria-pressed": String(open),
+        "aria-label": open ? `${greeting.join("")} ${t().hide} ${name}` : `${t().reveal} ${name}`,
+      },
     );
+    if (open) {
+      card.replaceChildren(
+        ...greeting.map((part, index) => (index % 2 ? element("strong", part) : part)),
+      );
+    }
+    cards.append(card);
   });
   main.append(cards);
 }
