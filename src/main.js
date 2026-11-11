@@ -322,7 +322,10 @@ function renderCards(main, game) {
     );
     if (open) {
       card.replaceChildren(
-        ...greeting.map((part, index) => (index % 2 ? element("strong", part) : part)),
+        ...greeting.map((part, index) => {
+          if (index === 3) return element("strong", part, { class: "recipient" });
+          return index % 2 ? element("strong", part) : part;
+        }),
       );
     }
     cards.append(card);
