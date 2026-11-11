@@ -1,68 +1,201 @@
+:root {
+  color-scheme: light dark;
+  --background: #f7f8f6;
+  --surface: #ffffff;
+  --subtle: #eef1ed;
+  --text: #28332e;
+  --muted: #5d6b63;
+  --border: #d3dbd5;
+  --accent: #426650;
+  --on-accent: #ffffff;
+  --radius: 0.65rem;
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #171c19;
+    --surface: #202823;
+    --subtle: #2a352e;
+    --text: #e4ebe6;
+    --muted: #a7b6ac;
+    --border: #45554a;
+    --accent: #a0c5aa;
+    --on-accent: #17251c;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
 body {
   font-family: system-ui, sans-serif;
-  max-width: 48rem;
+  max-width: 46rem;
   margin: auto;
-  padding: 1rem;
-  line-height: 1.5;
+  padding: clamp(var(--space-4), 4vw, var(--space-8));
+  line-height: 1.6;
   overflow-wrap: anywhere;
+  background: var(--background);
+  color: var(--text);
+}
+header,
+.languages,
+form,
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+header {
+  justify-content: space-between;
+  margin-bottom: var(--space-8);
+}
+h1,
+h2,
+h3 {
+  font-weight: 600;
+  line-height: 1.3;
+}
+h1 {
+  font-size: 1.125rem;
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+h2 {
+  font-size: 1.5rem;
+  margin: 0 0 var(--space-6);
+  letter-spacing: -0.025em;
+}
+h3 {
+  font-size: 0.875rem;
+  margin: var(--space-8) 0 var(--space-3);
+  color: var(--muted);
+}
+p {
+  color: var(--muted);
 }
 button,
 input,
 select {
   font: inherit;
   min-height: 2.75rem;
-  box-sizing: border-box;
+  min-width: 0;
   max-width: 100%;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  background: var(--surface);
+  padding: var(--space-2) var(--space-3);
 }
 button {
   cursor: pointer;
-  padding: 0.5rem;
+  font-weight: 500;
 }
-input {
+button:hover {
+  background: var(--subtle);
+}
+.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--on-accent);
+}
+.primary:hover {
+  background: var(--accent);
+  filter: brightness(0.92);
+}
+input,
+select {
   width: 100%;
 }
 label {
   display: block;
+  font-size: 0.875rem;
+  color: var(--muted);
 }
 label input,
 label select {
   display: block;
-  margin-block: 0.25rem;
+  margin-top: var(--space-1);
+  font-size: 1rem;
 }
 form,
 .row {
-  display: flex;
   flex-wrap: wrap;
   align-items: end;
-  gap: 0.5rem;
 }
-form label {
-  flex: 1 1 12rem;
+form label,
+.row label {
+  flex: 1 1 10rem;
+}
+ul {
+  list-style: none;
+  padding: 0;
+  margin: var(--space-4) 0 var(--space-6);
 }
 li {
-  margin-block: 0.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-2);
+  padding-block: var(--space-2);
+  border-bottom: 1px solid var(--border);
 }
 li button,
-header button {
-  margin-inline-start: 0.5rem;
+.languages button {
+  background: transparent;
+  border-color: transparent;
+  color: var(--muted);
+}
+li button {
+  font-size: 0.875rem;
+}
+.languages {
+  gap: var(--space-1);
+}
+.languages button {
+  width: 2.75rem;
+  padding: var(--space-1);
+  font-size: 1rem;
+}
+.languages button[aria-pressed="true"] {
+  background: var(--subtle);
+  border-color: var(--border);
 }
 a {
   display: inline-block;
-  padding: 0.5rem;
+  padding: var(--space-2);
+  color: var(--accent);
+  text-underline-offset: 0.2em;
+}
+main > label {
+  margin-top: var(--space-6);
+  margin-bottom: var(--space-2);
 }
 .cards {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
-  gap: 1rem;
+  gap: var(--space-3);
+  margin-block: var(--space-6);
 }
 .card {
-  min-height: 8rem;
+  min-height: 9rem;
+  padding: var(--space-6);
   overflow-wrap: anywhere;
 }
 .card[aria-pressed="true"] {
-  border: 3px solid currentColor;
+  background: var(--subtle);
+  border-color: var(--accent);
 }
 :focus-visible {
-  outline: 3px solid currentColor;
+  outline: 2px solid var(--accent);
   outline-offset: 3px;
+}
+#status {
+  font-size: 0.875rem;
 }
