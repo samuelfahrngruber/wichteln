@@ -226,7 +226,7 @@ function renderSetup(main) {
 }
 
 function renderCards(main, game) {
-  main.append(element("h2", t().cards), element("p", t().hint));
+  main.append(element("h2", t().cards));
   const cards = element("div", "", { class: "cards" });
   game.names.forEach((name, index) => {
     const open = revealed === index;
