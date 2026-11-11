@@ -24,6 +24,8 @@ jobs:
         id: pages
       - run: vp check
       - run: vp test
+      - run: vp exec playwright install --with-deps chromium
+      - run: vp run test:e2e
       - run: vp build --base "$BASE_PATH/"
         env:
           BASE_PATH: ${{ steps.pages.outputs.base_path }}

@@ -25,3 +25,7 @@ dist-ssr
 !.vscode/
 !.vscode/settings.json
 !.vscode/extensions.json
+
+# Browser tests
+playwright-report
+test-results

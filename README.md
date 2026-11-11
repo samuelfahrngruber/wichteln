@@ -40,6 +40,8 @@ Open the local URL printed by `vp dev`.
 - `vp dev` starts the dev server.
 - `vp check` checks formatting, lint, and types.
 - `vp test` tests assignment rules and saved links.
+- `vp exec playwright install chromium` installs the test browser once.
+- `vp run test:e2e` runs Chromium end-to-end tests. The dev server starts automatically.
 - `vp build` builds the app in `dist`.
 - `vp preview` previews the build.
 

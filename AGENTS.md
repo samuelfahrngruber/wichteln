@@ -12,6 +12,7 @@
 - Exclusions are directional. Offer a shortcut to add both directions.
 - Keep English and German translations in sync.
 - Store final assignments in versioned links. Never redraw a saved game.
+- Run `vp run test:e2e` after changing UI behavior. Keep repeatable browser checks in `e2e`.
 - Test assignment rules and URL round trips when changing game logic.
 
 <!--VITE PLUS START-->
