@@ -266,7 +266,9 @@ function renderCards(main, game) {
         () => {
           revealed = revealed === index ? -1 : index;
           render();
-          document.querySelector(`#card-${index}`).focus();
+          const card = document.querySelector(`#card-${index}`);
+          card.classList.add("flipping");
+          card.focus();
         },
         {
           id: `card-${index}`,

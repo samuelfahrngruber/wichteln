@@ -210,6 +210,19 @@ main > label,
   background: var(--subtle);
   border-color: var(--accent);
 }
+@media (prefers-reduced-motion: no-preference) {
+  .card.flipping {
+    animation: card-flip 160ms ease-out;
+  }
+}
+@keyframes card-flip {
+  from {
+    transform: perspective(600px) rotateY(-90deg);
+  }
+  to {
+    transform: perspective(600px) rotateY(0deg);
+  }
+}
 :focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 3px;
