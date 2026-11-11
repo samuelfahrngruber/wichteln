@@ -35,7 +35,7 @@
 }
 body {
   font-family: system-ui, sans-serif;
-  max-width: 46rem;
+  max-width: 54rem;
   margin: auto;
   padding: clamp(var(--space-4), 4vw, var(--space-8));
   line-height: 1.6;
