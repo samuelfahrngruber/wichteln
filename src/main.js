@@ -3,7 +3,7 @@ import { draw, encodeGame, decodeGame } from "./game.js";
 import { translations } from "./translations.js";
 
 const app = document.querySelector("#app");
-let language = new URLSearchParams(location.hash.slice(1)).get("lang") === "de" ? "de" : "en";
+let language = new URLSearchParams(location.hash.slice(1)).get("lang") === "en" ? "en" : "de";
 let names = [];
 let exclusions = [];
 let gameLink = "";
@@ -43,13 +43,14 @@ function render() {
   app.replaceChildren();
   const header = element("header");
   header.append(element("h1", t().title));
-  for (const [code, label] of [
-    ["en", "English"],
-    ["de", "Deutsch"],
+  const languages = element("div", "", { class: "languages" });
+  for (const [code, label, flag] of [
+    ["de", "Deutsch", "🇦🇹"],
+    ["en", "English", "🇬🇧"],
   ]) {
-    header.append(
+    languages.append(
       button(
-        label,
+        flag,
         () => {
           language = code;
           params.set("lang", code);
@@ -64,10 +65,16 @@ function render() {
           render();
           document.querySelector(`button[lang="${code}"]`).focus();
         },
-        { lang: code, "aria-pressed": String(language === code) },
+        {
+          lang: code,
+          "aria-label": label,
+          title: label,
+          "aria-pressed": String(language === code),
+        },
       ),
     );
   }
+  header.append(languages);
   app.append(header);
   const main = element("main");
   app.append(main);
@@ -173,25 +180,29 @@ function renderSetup(main) {
   });
   main.append(
     rules,
-    button(t().create, () => {
-      if (names.length < 2) return announce("minimum");
-      const pairs = exclusions.map((pair) => pair.map((name) => names.indexOf(name)));
-      const seed = crypto.getRandomValues(new Uint32Array(1))[0];
-      try {
-        const assignments = draw(names, pairs, seed);
-        const url = new URL(location.href);
-        url.hash = new URLSearchParams({
-          lang: language,
-          game: encodeGame({ version: 1, names, exclusions: pairs, seed, assignments }),
-        });
-        gameLink = url.href;
-        message = "";
-        render();
-        document.querySelector("#game-link").focus();
-      } catch {
-        announce("impossible");
-      }
-    }),
+    button(
+      t().create,
+      () => {
+        if (names.length < 2) return announce("minimum");
+        const pairs = exclusions.map((pair) => pair.map((name) => names.indexOf(name)));
+        const seed = crypto.getRandomValues(new Uint32Array(1))[0];
+        try {
+          const assignments = draw(names, pairs, seed);
+          const url = new URL(location.href);
+          url.hash = new URLSearchParams({
+            lang: language,
+            game: encodeGame({ version: 1, names, exclusions: pairs, seed, assignments }),
+          });
+          gameLink = url.href;
+          message = "";
+          render();
+          document.querySelector("#game-link").focus();
+        } catch {
+          announce("impossible");
+        }
+      },
+      { class: "primary" },
+    ),
   );
   if (gameLink) {
     const link = element("input", "", { id: "game-link", readonly: "", type: "url" });
@@ -212,7 +223,6 @@ function renderSetup(main) {
       element("a", t().open, { href: gameLink }),
     );
   }
-  main.append(element("p", t().privacy));
 }
 
 function renderCards(main, game) {
@@ -239,10 +249,10 @@ function renderCards(main, game) {
       ),
     );
   });
-  main.append(cards, element("p", t().privacy));
+  main.append(cards);
 }
 window.addEventListener("hashchange", () => {
-  language = new URLSearchParams(location.hash.slice(1)).get("lang") === "de" ? "de" : "en";
+  language = new URLSearchParams(location.hash.slice(1)).get("lang") === "en" ? "en" : "de";
   revealed = -1;
   message = "";
   render();

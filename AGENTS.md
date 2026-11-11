@@ -10,7 +10,8 @@
 - Store all game data in the URL. Do not require a server or local storage.
 - Preserve existing game links. The same link must always give the same assignments.
 - Exclusions are directional. Offer a shortcut to add both directions.
-- Keep English and German translations in sync.
+- Keep English and German translations in sync. German is the default.
+- Use shared CSS variables and respect the system light or dark theme. Keep the design understated.
 - Store final assignments in versioned links. Never redraw a saved game.
 - Run `vp run test:e2e` after changing UI behavior. Keep repeatable browser checks in `e2e`.
 - Test assignment rules and URL round trips when changing game logic.

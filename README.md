@@ -4,7 +4,8 @@ A Secret Santa app for friends and family. Built with Vite+, without a frontend 
 
 - Add participants by name. Use a surname or nickname to distinguish people with the same name.
 - Exclusions apply in one direction. Use “Add both directions” for couples.
-- Switch between English and German at any time.
+- German is the default. Switch languages with the 🇦🇹 and 🇬🇧 buttons.
+- The design follows your device’s light or dark mode.
 - Create a link to a game with one card per participant.
 - Select a card to reveal its recipient. Select it again to hide it.
 - Only one card can be revealed at a time.

@@ -11,7 +11,7 @@ test("shared games stay stable across languages, reloads, and browser contexts",
   page,
   browser,
 }) => {
-  await page.goto("/");
+  await page.goto("/#lang=en");
   await addNames(page, ["Änne 🎁", "Ben", "Clara", "David"]);
   await page.getByRole("button", { name: "Add both directions", exact: true }).click();
   await expect(page.locator("li")).toHaveCount(6);
@@ -58,7 +58,7 @@ test("shared games stay stable across languages, reloads, and browser contexts",
 });
 
 test("directed exclusions, impossible games, and participant removal", async ({ page }) => {
-  await page.goto("/");
+  await page.goto("/#lang=en");
   await page.getByRole("button", { name: "Create", exact: true }).click();
   await expect(page.getByRole("status")).toContainText("at least two");
   await addNames(page, ["Alice", "Bob"]);
@@ -82,8 +82,49 @@ test("directed exclusions, impossible games, and participant removal", async ({ 
 });
 
 test("invalid links show an error and allow starting a new game", async ({ page }) => {
-  await page.goto("/#game=broken");
+  await page.goto("/#lang=en&game=broken");
   await expect(page.getByRole("alert")).toContainText("invalid");
   await page.getByRole("link", { name: "Create a new game" }).click();
   await expect(page.getByRole("heading", { name: "Create a game" })).toBeVisible();
+});
+
+test("German is the default and both themes work on mobile", async ({ page }, testInfo) => {
+  const backgrounds = [];
+  for (const colorScheme of ["light", "dark"]) {
+    await page.emulateMedia({ colorScheme });
+    await page.goto("/");
+    await expect(page.locator("html")).toHaveAttribute("lang", "de");
+    await expect(page.getByRole("button", { name: "Deutsch", exact: true })).toHaveText("🇦🇹");
+    await expect(page.getByRole("button", { name: "English", exact: true })).toHaveText("🇬🇧");
+    await expect(page.getByRole("button", { name: "Deutsch", exact: true })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+    await addNames(page, ["Anna", "Bernhard", "Clara", "David"]);
+    await page.getByRole("button", { name: "Beide Richtungen hinzufügen" }).click();
+    await expect(page.getByText(/kodiert|verschlüsselt/)).toHaveCount(0);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
+      true,
+    );
+    backgrounds.push(
+      await page.locator("body").evaluate((body) => getComputedStyle(body).backgroundColor),
+    );
+    await page.screenshot({
+      path: testInfo.outputPath(`${colorScheme}-setup.png`),
+      fullPage: true,
+    });
+    await page.getByRole("button", { name: "Erstellen", exact: true }).click();
+    await page.getByRole("link", { name: "Spiel öffnen" }).click();
+    await page.locator("#card-0").click();
+    await expect(page.locator('.card[aria-pressed="true"]')).toHaveCount(1);
+    await expect(page.getByText(/kodiert|verschlüsselt/)).toHaveCount(0);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
+      true,
+    );
+    await page.screenshot({
+      path: testInfo.outputPath(`${colorScheme}-cards.png`),
+      fullPage: true,
+    });
+  }
+  expect(backgrounds[0]).not.toBe(backgrounds[1]);
 });

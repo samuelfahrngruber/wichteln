@@ -21,7 +21,6 @@ export const translations = {
     reveal: "Reveal recipient for",
     hide: "Hide recipient for",
     greeting: (name, recipient) => `Hello ${name}, you need to find a present for ${recipient}.`,
-    privacy: "Anyone with this link can reveal all recipients. The link is encoded, not encrypted.",
     empty: "Enter a name.",
     duplicate: "Use a different name or add a surname to distinguish participants.",
     minimum: "Add at least two participants.",
@@ -57,8 +56,6 @@ export const translations = {
     reveal: "Beschenkte Person anzeigen für",
     hide: "Beschenkte Person verbergen für",
     greeting: (name, recipient) => `Hallo ${name}, du darfst ein Geschenk für ${recipient} finden.`,
-    privacy:
-      "Alle mit diesem Link können alle beschenkten Personen sehen. Der Link ist kodiert, nicht verschlüsselt.",
     empty: "Gib einen Namen ein.",
     duplicate: "Verwende einen anderen Namen oder ergänze einen Nachnamen zur Unterscheidung.",
     minimum: "Füge mindestens zwei Personen hinzu.",
