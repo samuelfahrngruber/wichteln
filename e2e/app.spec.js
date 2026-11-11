@@ -1,5 +1,10 @@
 import { test, expect } from "@playwright/test";
 
+async function setGameSettings(page, group = "Familie") {
+  await page.getByLabel(/Group name|Gruppenname/).fill(group);
+  await page.getByLabel(/Max\. value|Max\. Wert/).fill("25.50");
+}
+
 async function addNames(page, names) {
   for (const name of names) {
     await page.getByLabel("Name", { exact: true }).fill(name);
@@ -12,6 +17,7 @@ test("shared games stay stable across languages, reloads, and browser contexts",
   browser,
 }) => {
   await page.goto("/#lang=en");
+  await setGameSettings(page);
   await addNames(page, ["Änne 🎁", "Ben", "Clara", "David"]);
   await page.getByRole("button", { name: "Add both directions", exact: true }).click();
   await expect(page.locator("li")).toHaveCount(6);
@@ -24,7 +30,9 @@ test("shared games stay stable across languages, reloads, and browser contexts",
   await expect(page.locator(".card")).toHaveCount(4);
   await page.locator("#card-0").click();
   const first = await page.locator("#card-0").innerText();
-  expect(first).toMatch(/^Hallo Änne 🎁/);
+  expect(first).toMatch(/^Hi Änne 🎁! Finde ein Geschenk für:/);
+  await expect(page.locator("#card-0 .recipient")).toHaveText(/.+/);
+  await expect(page.locator(".game-heading .euro-bill strong")).toHaveText("€ 25,50");
   expect(first).not.toContain("für Ben");
   await expect(page.locator('.card[aria-pressed="true"]')).toHaveCount(1);
   await page.locator("#card-1").click();
@@ -53,12 +61,15 @@ test("shared games stay stable across languages, reloads, and browser contexts",
   await expect(page.locator("#card-0")).toHaveText(first);
   const gameBefore = new URLSearchParams(new URL(page.url()).hash.slice(1)).get("game");
   await page.getByRole("button", { name: "English", exact: true }).click();
-  await expect(page.locator("#card-0")).toContainText("Hello Änne 🎁");
+  await expect(page.locator("#card-0")).toContainText("Hello Änne 🎁, find a present for:");
   expect(new URLSearchParams(new URL(page.url()).hash.slice(1)).get("game")).toBe(gameBefore);
 });
 
 test("directed exclusions, impossible games, and participant removal", async ({ page }) => {
   await page.goto("/#lang=en");
+  await page.getByRole("button", { name: "Create", exact: true }).click();
+  await expect(page.getByRole("status")).toContainText("group name");
+  await setGameSettings(page, "Family");
   await page.getByRole("button", { name: "Create", exact: true }).click();
   await expect(page.getByRole("status")).toContainText("at least two");
   await addNames(page, ["Alice", "Bob"]);
@@ -70,9 +81,9 @@ test("directed exclusions, impossible games, and participant removal", async ({ 
   await page.getByRole("button", { name: "Create", exact: true }).click();
   await page.getByRole("link", { name: "Open game", exact: true }).click();
   await page.locator("#card-0").click();
-  await expect(page.locator("#card-0")).toContainText("for Carol");
+  await expect(page.locator("#card-0")).toContainText("for: Carol");
   await page.locator("#card-1").click();
-  await expect(page.locator("#card-1")).toContainText("for Alice");
+  await expect(page.locator("#card-1")).toContainText("for: Alice");
   await page.getByRole("link", { name: "Create a new game" }).click();
   await page.getByRole("button", { name: "Remove: Alice", exact: true }).click();
   await expect(page.locator("li")).toHaveCount(2);
@@ -93,6 +104,7 @@ test("German is the default and both themes work on mobile", async ({ page }, te
   for (const colorScheme of ["light", "dark"]) {
     await page.emulateMedia({ colorScheme });
     await page.goto("/");
+    await setGameSettings(page, "Familie");
     await expect(page.locator("html")).toHaveAttribute("lang", "de");
     await expect(page.getByRole("button", { name: "Deutsch", exact: true })).toHaveText("🇦🇹");
     await expect(page.getByRole("button", { name: "English", exact: true })).toHaveText("🇬🇧");
